@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Let's_chatting_live</title>
+</head>
+<script src="https://cdn.socket.io/4.5.0/socket.io.min.js" integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k" crossorigin="anonymous"></script>
+<style>
+    body{
+    background-color: skyblue;
+}
+h2{
+    font-family: cursive;
+    text-align: center;
+}
+#app{
+    width: 100%;
+    margin: auto;
+}
+
+#chat-window{
+    border: 1px solid red;
+    height: 500px;
+    border-radius: 20px;
+    padding-top: 10px;
+    color: darkslategray;
+    font-size: 20px;
+    font-style: italic;
+}
+#output{
+  font-size: 15px;
+}
+#name, #message{
+    width: 98%;
+    height: 30px;
+    border: 1px solid black;
+    border-radius: 10px;
+    background: black;
+    color: green;
+    font-family: cursive;
+    font-size: 15px;
+    
+}
+#send{
+    width: 50%;
+    color: green;
+    text-align: center;
+    background: black;
+    height: 50px;
+    margin-left: 100px;
+    border-radius: 50px;
+}
+</style>
+<body>
+  <h2 id="user"></h2>
+    <div id="app">
+        <h2>Welcome from chat-room</h2>
+        <div id="chat-window">
+            <div id="output"></div>
+            <div id="feedback"></div>
+        </div>
+        <input type="text" placeholder="Name" id="name"/>
+        <input type="text" placeholder="Message" id="message">
+        <button id="send">Send</button>
+    </div>
+</body>
+<script>
+    let output = document.getElementById('output');
+    let feedback = document.getElementById('feedback');
+    let name = document.getElementById('name');
+    let message = document.getElementById('message');
+    let send = document.getElementById('send');
+    let socket = io('localhost:8080');
+    
+    
+    send.addEventListener('click',()=>{
+        let data = {
+            name : name.value,
+            message : message.value
+        }
+        socket.emit('chat', data);
+    });
+    socket.on('chat', (data)=>{
+      output.innerHTML += data.name + ': ' + data.message + '</br>';
+      
+      if (name.value){
+        name.style.display = 'none';
+        }
+        
+       message.value= "";
+    })
+</script>
+</html>
